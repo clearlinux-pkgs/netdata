@@ -4,7 +4,7 @@
 #
 Name     : netdata
 Version  : 1.14.0
-Release  : 2
+Release  : 3
 URL      : https://github.com/netdata/netdata/releases/download/v1.14.0/netdata-v1.14.0.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.14.0/netdata-v1.14.0.tar.gz
 Summary  : Real-time performance monitoring, in the greatest possible detail, over the web
@@ -20,6 +20,7 @@ BuildRequires : krb5-dev
 BuildRequires : pkgconfig(libcap)
 BuildRequires : pkgconfig(libipmimonitoring)
 BuildRequires : pkgconfig(libmnl)
+BuildRequires : pkgconfig(libnetfilter_acct)
 BuildRequires : pkgconfig(uuid)
 BuildRequires : pkgconfig(yajl)
 BuildRequires : pkgconfig(zlib)
@@ -68,7 +69,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1558100735
+export SOURCE_DATE_EPOCH=1558101774
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
 export FFLAGS="$CFLAGS -fno-lto "
@@ -84,7 +85,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1558100735
+export SOURCE_DATE_EPOCH=1558101774
 rm -rf %{buildroot}
 %make_install
 
@@ -400,6 +401,7 @@ rm -rf %{buildroot}
 /usr/libexec/netdata/plugins.d/freeipmi.plugin
 /usr/libexec/netdata/plugins.d/health-cmdapi-test.sh
 /usr/libexec/netdata/plugins.d/loopsleepms.sh.inc
+/usr/libexec/netdata/plugins.d/nfacct.plugin
 /usr/libexec/netdata/plugins.d/node.d.plugin
 /usr/libexec/netdata/plugins.d/python.d.plugin
 /usr/libexec/netdata/plugins.d/tc-qos-helper.sh

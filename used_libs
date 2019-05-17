@@ -4,6 +4,8 @@ libcups.so.2
 libgcc_s.so.1
 libipmimonitoring.so.6
 libm.so.6
+libmnl.so.0
+libnetfilter_acct.so.1
 libpthread.so.0
 libuuid.so.1
 libz.so.1
