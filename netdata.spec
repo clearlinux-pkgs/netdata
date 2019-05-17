@@ -4,7 +4,7 @@
 #
 Name     : netdata
 Version  : 1.14.0
-Release  : 3
+Release  : 4
 URL      : https://github.com/netdata/netdata/releases/download/v1.14.0/netdata-v1.14.0.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.14.0/netdata-v1.14.0.tar.gz
 Summary  : Real-time performance monitoring, in the greatest possible detail, over the web
@@ -69,7 +69,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1558101774
+export SOURCE_DATE_EPOCH=1558103152
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
 export FFLAGS="$CFLAGS -fno-lto "
@@ -85,9 +85,12 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1558101774
+export SOURCE_DATE_EPOCH=1558103152
 rm -rf %{buildroot}
 %make_install
+## install_append content
+rm -rf %{buildroot}/var
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -245,10 +248,6 @@ rm -rf %{buildroot}
 /usr/lib64/netdata/conf.d/python.d/web_log.conf
 /usr/lib64/netdata/conf.d/statsd.d/example.conf
 /usr/lib64/netdata/conf.d/stream.conf
-/var/cache/netdata/.keep
-/var/lib/netdata/.keep
-/var/lib/netdata/registry/.keep
-/var/log/netdata/.keep
 
 %files bin
 %defattr(-,root,root,-)
