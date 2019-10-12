@@ -1,6 +1,6 @@
 Configure miss: whether sys/types.h defines makedev
 Configure miss: uv_fs_scandir_next in -luv
-Configure miss: LZ4_decompress_safe in -llz4
+Configure miss: LZ4_compress_default in -llz4
 Configure miss: JudyLIns in -lJudy
 Configure miss: if netdata dbengine should be used
 Configure miss: x86_64-generic-linux-gnu-cups-config
@@ -10,3 +10,7 @@ Configure miss: if xenstat.plugin should be enabled
 Configure miss: cJSON_free in -laws-cpp-sdk-core
 Configure miss: Aws::Kinesis::Model::PutRecordRequest in -laws-cpp-sdk-kinesis
 Configure miss: if kinesis backend should be enabled
+Configure miss: snappy::RawCompress in -lsnappy
+Configure miss: if prometheus remote write backend should be enabled
+Configure miss: LIBMONGOC
+Configure miss: if mongodb backend should be enabled
