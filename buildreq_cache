@@ -1,7 +1,2 @@
-1.19.0
-cups-dev
-e2fsprogs-dev
-gnutls-dev
-krb5-dev
-libcap-dev
+1.20.0
 lz4-dev
