@@ -4,7 +4,7 @@
 #
 Name     : netdata
 Version  : 1.22.1
-Release  : 14
+Release  : 15
 URL      : https://github.com/netdata/netdata/releases/download/v1.22.1/netdata-v1.22.1.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.22.1/netdata-v1.22.1.tar.gz
 Summary  : The Common Unix Printing System plugin for netdata
@@ -14,6 +14,7 @@ Requires: netdata-bin = %{version}-%{release}
 Requires: netdata-data = %{version}-%{release}
 Requires: netdata-libexec = %{version}-%{release}
 Requires: netdata-license = %{version}-%{release}
+Requires: netdata-services = %{version}-%{release}
 BuildRequires : Judy-dev
 BuildRequires : cups-dev
 BuildRequires : libuv-dev
@@ -49,6 +50,7 @@ Group: Binaries
 Requires: netdata-data = %{version}-%{release}
 Requires: netdata-libexec = %{version}-%{release}
 Requires: netdata-license = %{version}-%{release}
+Requires: netdata-services = %{version}-%{release}
 
 %description bin
 bin components for the netdata package.
@@ -79,6 +81,14 @@ Group: Default
 license components for the netdata package.
 
 
+%package services
+Summary: services components for the netdata package.
+Group: Systemd services
+
+%description services
+services components for the netdata package.
+
+
 %prep
 %setup -q -n netdata-v1.22.1
 cd %{_builddir}/netdata-v1.22.1
@@ -88,7 +98,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1601565992
+export SOURCE_DATE_EPOCH=1601566409
 unset LD_AS_NEEDED
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
@@ -99,13 +109,16 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 make
 
 %install
-export SOURCE_DATE_EPOCH=1601565992
+export SOURCE_DATE_EPOCH=1601566409
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/netdata
 cp %{_builddir}/netdata-v1.22.1/LICENSE %{buildroot}/usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a
 %make_install
 ## install_append content
 rm -rf %{buildroot}/var
+mkdir -p %{buildroot}/usr/lib/systemd/system/
+install -m 644 -p system/netdata.service "%{buildroot}/usr/lib/systemd/system/netdata.service"
+
 ## install_append end
 
 %files
@@ -598,3 +611,7 @@ rm -rf %{buildroot}/var
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a
+
+%files services
+%defattr(-,root,root,-)
+/usr/lib/systemd/system/netdata.service
