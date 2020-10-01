@@ -4,7 +4,7 @@
 #
 Name     : netdata
 Version  : 1.22.1
-Release  : 13
+Release  : 14
 URL      : https://github.com/netdata/netdata/releases/download/v1.22.1/netdata-v1.22.1.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.22.1/netdata-v1.22.1.tar.gz
 Summary  : The Common Unix Printing System plugin for netdata
@@ -32,6 +32,7 @@ BuildRequires : pkgconfig(uuid)
 BuildRequires : pkgconfig(yajl)
 BuildRequires : pkgconfig(zlib)
 BuildRequires : rrdtool-dev
+BuildRequires : systemd-dev
 
 %description
 netdata is the fastest way to visualize metrics. It is a resource
@@ -87,7 +88,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1589383172
+export SOURCE_DATE_EPOCH=1601565992
 unset LD_AS_NEEDED
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
@@ -98,7 +99,7 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 make
 
 %install
-export SOURCE_DATE_EPOCH=1589383172
+export SOURCE_DATE_EPOCH=1601565992
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/netdata
 cp %{_builddir}/netdata-v1.22.1/LICENSE %{buildroot}/usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a

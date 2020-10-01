@@ -4,3 +4,4 @@ cups-dev
 rrdtool-dev
 Judy-dev
 libuv-dev
+systemd-dev
