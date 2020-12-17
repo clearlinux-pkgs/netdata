@@ -1,15 +1,23 @@
 Configure miss: whether sys/types.h defines makedev
+Configure miss: LZ4_compress_default in -llz4
+Configure miss: if netdata dbengine should be used
 Configure miss: if libmosquitto static lib is present (and builds)
-Configure miss: if libwebsockets static lib is present
+Configure miss: lws_get_vhost_by_name in -lwebsockets
 Configure miss: if netdata agent-cloud-link can be enabled
 Configure miss: if netdata agent-cloud-link should/will be enabled
 Configure miss: x86_64-generic-linux-gnu-cups-config
 Configure miss: xenstat_init in -lxenstat
 Configure miss: XENLIGHT
 Configure miss: if xenstat.plugin should be enabled
-Configure miss: cJSON_free in -laws-cpp-sdk-core
-Configure miss: Aws::Kinesis::Model::PutRecordRequest in -laws-cpp-sdk-kinesis
+Configure miss: externaldeps/libbpf/libbpf.a
+Configure miss: if ebpf.plugin should be enabled
+Configure miss: AWS_CPP_SDK_CORE
+Configure miss: AWS_CPP_SDK_KINESIS
+Configure miss: aws_checksums_crc32 in -laws-checksums
+Configure miss: aws_default_allocator in -laws-c-common
+Configure miss: aws_event_stream_library_init in -laws-c-event-stream
 Configure miss: if kinesis backend should be enabled
+Configure miss: PUBSUB
 Configure miss: snappy::RawCompress in -lsnappy
 Configure miss: if prometheus remote write backend should be enabled
 Configure miss: LIBMONGOC
