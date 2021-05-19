@@ -1,7 +1,6 @@
 Configure miss: AWS_CPP_SDK_CORE
 Configure miss: AWS_CPP_SDK_KINESIS
 Configure miss: LIBMONGOC
-Configure miss: LZ4_compress_default in -llz4
 Configure miss: PUBSUB
 Configure miss: XENLIGHT
 Configure miss: aws_checksums_crc32 in -laws-checksums
@@ -14,11 +13,8 @@ Configure miss: if libmosquitto static lib is present (and builds)
 Configure miss: if mongodb backend should be enabled
 Configure miss: if netdata agent-cloud-link can be enabled
 Configure miss: if netdata agent-cloud-link should/will be enabled
-Configure miss: if netdata dbengine should be used
-Configure miss: if prometheus remote write backend should be enabled
 Configure miss: if xenstat.plugin should be enabled
 Configure miss: lws_get_vhost_by_name in -lwebsockets
-Configure miss: snappy::RawCompress in -lsnappy
 Configure miss: whether sys/types.h defines makedev
 Configure miss: x86_64-generic-linux-gnu-cups-config
 Configure miss: xenstat_init in -lxenstat

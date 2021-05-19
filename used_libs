@@ -1,4 +1,5 @@
 ld-linux-x86-64.so.2
+libJudy.so.1
 libc.so.6
 libcap.so.2
 libcrypto.so.1.1
@@ -6,11 +7,15 @@ libcups.so.2
 libgcc_s.so.1
 libipmimonitoring.so.6
 libjson-c.so.4
+liblz4.so.1
 libm.so.6
 libmnl.so.0
 libnetfilter_acct.so.1
+libprotobuf.so.23
 libpthread.so.0
+libsnappy.so.1
 libssl.so.1.1
+libstdc++.so.6
 libuuid.so.1
 libuv.so.1
 libz.so.1

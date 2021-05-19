@@ -5,3 +5,5 @@ rrdtool-dev
 Judy-dev
 libuv-dev
 systemd-dev
+snappy-dev
+lz4-dev
