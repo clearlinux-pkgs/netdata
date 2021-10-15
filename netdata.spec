@@ -4,7 +4,7 @@
 #
 Name     : netdata
 Version  : 1.31.0
-Release  : 23
+Release  : 24
 URL      : https://github.com/netdata/netdata/releases/download/v1.31.0/netdata-v1.31.0.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.31.0/netdata-v1.31.0.tar.gz
 Summary  : The Common Unix Printing System plugin for netdata
