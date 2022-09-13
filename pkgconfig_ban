@@ -5,3 +5,4 @@ libmongoc-1.0
 aws-cpp-sdk-core
 aws-cpp-sdk-kinesis
 googleapis_cpp_pubsub_protos
+google_cloud_cpp_pubsub_protos
