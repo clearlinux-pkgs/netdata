@@ -1,9 +1,9 @@
-Configure miss: AWS_CPP_SDK_CORE
-Configure miss: AWS_CPP_SDK_KINESIS
-Configure miss: LIBMONGOC
-Configure miss: PUBSUB
-Configure miss: XENLIGHT
+Configure miss: aws-cpp-sdk-core
+Configure miss: aws-cpp-sdk-kinesis
 Configure miss: externaldeps/libbpf/libbpf.a
+Configure miss: g++ option to enable C++11 features
+Configure miss: gcc options needed to detect all undeclared functions
+Configure miss: google_cloud_cpp_pubsub_protos
 Configure miss: if LTO should be enabled
 Configure miss: if ebpf.plugin should be enabled
 Configure miss: if kinesis exporting connector should be enabled
@@ -11,6 +11,7 @@ Configure miss: if mongodb exporting connector should be enabled
 Configure miss: if xenstat.plugin should be enabled
 Configure miss: is bundled protobuf available
 Configure miss: isfinite
-Configure miss: whether sys/types.h defines makedev
+Configure miss: libmongoc-1.0 >= 1.7
 Configure miss: x86_64-generic-linux-gnu-cups-config
+Configure miss: xenlight
 Configure miss: xenstat_init in -lxenstat
