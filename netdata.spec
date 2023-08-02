@@ -5,7 +5,7 @@
 #
 Name     : netdata
 Version  : 1.41.0
-Release  : 32
+Release  : 33
 URL      : https://github.com/netdata/netdata/releases/download/v1.41.0/netdata-v1.41.0.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.41.0/netdata-v1.41.0.tar.gz
 Summary  : The CUPS metrics collection plugin for the Netdata Agent
