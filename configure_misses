@@ -1,17 +1,40 @@
 Configure miss: aws-cpp-sdk-core
+Configure miss: aws-cpp-sdk-core
 Configure miss: aws-cpp-sdk-kinesis
+Configure miss: aws-cpp-sdk-kinesis
+Configure miss: can build H2O
+Configure miss: can build H2O
+Configure miss: externaldeps/libbpf/libbpf.a
 Configure miss: externaldeps/libbpf/libbpf.a
 Configure miss: g++ option to enable C++11 features
+Configure miss: g++ option to enable C++11 features
+Configure miss: gcc options needed to detect all undeclared functions
 Configure miss: gcc options needed to detect all undeclared functions
 Configure miss: google_cloud_cpp_pubsub_protos
+Configure miss: google_cloud_cpp_pubsub_protos
+Configure miss: if LTO should be enabled
 Configure miss: if LTO should be enabled
 Configure miss: if ebpf.plugin should be enabled
+Configure miss: if ebpf.plugin should be enabled
+Configure miss: if kinesis exporting connector should be enabled
 Configure miss: if kinesis exporting connector should be enabled
 Configure miss: if mongodb exporting connector should be enabled
+Configure miss: if mongodb exporting connector should be enabled
+Configure miss: if xenstat.plugin should be enabled
 Configure miss: if xenstat.plugin should be enabled
 Configure miss: is bundled protobuf available
+Configure miss: is bundled protobuf available
+Configure miss: isfinite
 Configure miss: isfinite
 Configure miss: libmongoc-1.0 >= 1.7
+Configure miss: libmongoc-1.0 >= 1.7
+Configure miss: rtcCreatePeerConnection in -ldatachannel
+Configure miss: rtcCreatePeerConnection in -ldatachannel
+Configure miss: whether C compiler accepts -mbranch-protection=standard
+Configure miss: whether C compiler accepts -mbranch-protection=standard
+Configure miss: x86_64-generic-linux-gnu-cups-config
 Configure miss: x86_64-generic-linux-gnu-cups-config
 Configure miss: xenlight
+Configure miss: xenlight
+Configure miss: xenstat_init in -lxenstat
 Configure miss: xenstat_init in -lxenstat

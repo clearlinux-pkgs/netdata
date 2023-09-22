@@ -4,13 +4,18 @@
 # Using build pattern: configure
 #
 Name     : netdata
-Version  : 1.41.0
-Release  : 33
-URL      : https://github.com/netdata/netdata/releases/download/v1.41.0/netdata-v1.41.0.tar.gz
-Source0  : https://github.com/netdata/netdata/releases/download/v1.41.0/netdata-v1.41.0.tar.gz
+Version  : 1.42.4
+Release  : 34
+URL      : https://github.com/netdata/netdata/releases/download/v1.42.4/netdata-v1.42.4.tar.gz
+Source0  : https://github.com/netdata/netdata/releases/download/v1.42.4/netdata-v1.42.4.tar.gz
 Summary  : The CUPS metrics collection plugin for the Netdata Agent
 Group    : Development/Tools
 License  : Apache-2.0 Artistic-1.0 BSD-2-Clause BSD-3-Clause BSL-1.0 CC0-1.0 GPL-1.0 GPL-2.0 GPL-3.0 GPL-3.0+ LGPL-3.0 Libpng MIT
+Requires: netdata-bin = %{version}-%{release}
+Requires: netdata-data = %{version}-%{release}
+Requires: netdata-libexec = %{version}-%{release}
+Requires: netdata-license = %{version}-%{release}
+Requires: netdata-services = %{version}-%{release}
 BuildRequires : Judy-dev
 BuildRequires : buildreq-configure
 BuildRequires : cups-dev
@@ -36,6 +41,7 @@ BuildRequires : pkgconfig(zlib)
 BuildRequires : rrdtool-dev
 BuildRequires : snappy-dev
 BuildRequires : systemd-dev
+BuildRequires : yaml-dev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
@@ -49,11 +55,57 @@ queries, API calls, web site visitors, etc.
 so that you can get insights of what is happening now and what just
 happened, on your systems and applications.
 
+%package bin
+Summary: bin components for the netdata package.
+Group: Binaries
+Requires: netdata-data = %{version}-%{release}
+Requires: netdata-libexec = %{version}-%{release}
+Requires: netdata-license = %{version}-%{release}
+Requires: netdata-services = %{version}-%{release}
+
+%description bin
+bin components for the netdata package.
+
+
+%package data
+Summary: data components for the netdata package.
+Group: Data
+
+%description data
+data components for the netdata package.
+
+
+%package libexec
+Summary: libexec components for the netdata package.
+Group: Default
+Requires: netdata-license = %{version}-%{release}
+
+%description libexec
+libexec components for the netdata package.
+
+
+%package license
+Summary: license components for the netdata package.
+Group: Default
+
+%description license
+license components for the netdata package.
+
+
+%package services
+Summary: services components for the netdata package.
+Group: Systemd services
+Requires: systemd
+
+%description services
+services components for the netdata package.
+
+
 %prep
-%setup -q -n netdata-v1.41.0
-cd %{_builddir}/netdata-v1.41.0
+%setup -q -n netdata-v1.42.4
+cd %{_builddir}/netdata-v1.42.4
 pushd ..
-cp -a netdata-v1.41.0 buildavx2
+cp -a netdata-v1.42.4 buildavx2
 popd
 
 %build
@@ -61,7 +113,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1690986536
+export SOURCE_DATE_EPOCH=1695398251
 unset LD_AS_NEEDED
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -82,7 +134,7 @@ export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 make
 popd
 %install
-export SOURCE_DATE_EPOCH=1690986536
+export SOURCE_DATE_EPOCH=1695398251
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/netdata
 cp %{_builddir}/netdata-v%{version}/LICENSE %{buildroot}/usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a || :
@@ -96,6 +148,7 @@ cp %{_builddir}/netdata-v%{version}/mqtt_websockets/c-rbuf/LICENSE %{buildroot}/
 cp %{_builddir}/netdata-v%{version}/mqtt_websockets/c_rhash/COPYING %{buildroot}/usr/share/package-licenses/netdata/31a3d460bb3c7d98845187c716a30db81c44b615 || :
 cp %{_builddir}/netdata-v%{version}/mqtt_websockets/c_rhash/LICENSE %{buildroot}/usr/share/package-licenses/netdata/31a3d460bb3c7d98845187c716a30db81c44b615 || :
 cp %{_builddir}/netdata-v%{version}/web/gui/v1/static/js/2.62d105c5.chunk.js.LICENSE %{buildroot}/usr/share/package-licenses/netdata/68af023f8c18dad5d0d48023109cecf405821308 || :
+cp %{_builddir}/netdata-v%{version}/web/gui/v2/6613.b8903cda67bd33100ce4.chunk.js.LICENSE.txt %{buildroot}/usr/share/package-licenses/netdata/8f8fc5a876007f452614f65a13315c00b235f0e3 || :
 cp %{_builddir}/netdata-v%{version}/web/server/h2o/libh2o/LICENSE %{buildroot}/usr/share/package-licenses/netdata/183197624e7e4e2df6767ed44a86fe531e93b7d1 || :
 cp %{_builddir}/netdata-v%{version}/web/server/h2o/libh2o/deps/brotli/LICENSE %{buildroot}/usr/share/package-licenses/netdata/00cfbd3b6e9708228a623875361a43d2e1e9314b || :
 cp %{_builddir}/netdata-v%{version}/web/server/h2o/libh2o/deps/mruby-input-stream/LICENSE %{buildroot}/usr/share/package-licenses/netdata/5c103e7cfbcc509830ed46db6384bb1e248dd93b || :
@@ -113,10 +166,877 @@ popd
 ## install_append content
 rm -rf %{buildroot}/var
 mkdir -p %{buildroot}/usr/lib/systemd/system/
-install -m 644 -p system/netdata.service "%{buildroot}/usr/lib/systemd/system/netdata.service"
+install -m 644 -p system/systemd/netdata.service "%{buildroot}/usr/lib/systemd/system/netdata.service"
 
 ## install_append end
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
+/usr/lib64/netdata/conf.d/apps_groups.conf
+/usr/lib64/netdata/conf.d/charts.d.conf
+/usr/lib64/netdata/conf.d/charts.d/ap.conf
+/usr/lib64/netdata/conf.d/charts.d/apcupsd.conf
+/usr/lib64/netdata/conf.d/charts.d/example.conf
+/usr/lib64/netdata/conf.d/charts.d/libreswan.conf
+/usr/lib64/netdata/conf.d/charts.d/nut.conf
+/usr/lib64/netdata/conf.d/charts.d/opensips.conf
+/usr/lib64/netdata/conf.d/charts.d/sensors.conf
+/usr/lib64/netdata/conf.d/ebpf.d.conf
+/usr/lib64/netdata/conf.d/ebpf.d/cachestat.conf
+/usr/lib64/netdata/conf.d/ebpf.d/dcstat.conf
+/usr/lib64/netdata/conf.d/ebpf.d/disk.conf
+/usr/lib64/netdata/conf.d/ebpf.d/ebpf_kernel_reject_list.txt
+/usr/lib64/netdata/conf.d/ebpf.d/fd.conf
+/usr/lib64/netdata/conf.d/ebpf.d/filesystem.conf
+/usr/lib64/netdata/conf.d/ebpf.d/hardirq.conf
+/usr/lib64/netdata/conf.d/ebpf.d/mdflush.conf
+/usr/lib64/netdata/conf.d/ebpf.d/mount.conf
+/usr/lib64/netdata/conf.d/ebpf.d/network.conf
+/usr/lib64/netdata/conf.d/ebpf.d/oomkill.conf
+/usr/lib64/netdata/conf.d/ebpf.d/process.conf
+/usr/lib64/netdata/conf.d/ebpf.d/shm.conf
+/usr/lib64/netdata/conf.d/ebpf.d/softirq.conf
+/usr/lib64/netdata/conf.d/ebpf.d/swap.conf
+/usr/lib64/netdata/conf.d/ebpf.d/sync.conf
+/usr/lib64/netdata/conf.d/ebpf.d/vfs.conf
+/usr/lib64/netdata/conf.d/exporting.conf
+/usr/lib64/netdata/conf.d/health.d/adaptec_raid.conf
+/usr/lib64/netdata/conf.d/health.d/anomalies.conf
+/usr/lib64/netdata/conf.d/health.d/apcupsd.conf
+/usr/lib64/netdata/conf.d/health.d/bcache.conf
+/usr/lib64/netdata/conf.d/health.d/beanstalkd.conf
+/usr/lib64/netdata/conf.d/health.d/bind_rndc.conf
+/usr/lib64/netdata/conf.d/health.d/boinc.conf
+/usr/lib64/netdata/conf.d/health.d/btrfs.conf
+/usr/lib64/netdata/conf.d/health.d/ceph.conf
+/usr/lib64/netdata/conf.d/health.d/cgroups.conf
+/usr/lib64/netdata/conf.d/health.d/cockroachdb.conf
+/usr/lib64/netdata/conf.d/health.d/consul.conf
+/usr/lib64/netdata/conf.d/health.d/cpu.conf
+/usr/lib64/netdata/conf.d/health.d/dbengine.conf
+/usr/lib64/netdata/conf.d/health.d/disks.conf
+/usr/lib64/netdata/conf.d/health.d/dns_query.conf
+/usr/lib64/netdata/conf.d/health.d/dnsmasq_dhcp.conf
+/usr/lib64/netdata/conf.d/health.d/docker.conf
+/usr/lib64/netdata/conf.d/health.d/elasticsearch.conf
+/usr/lib64/netdata/conf.d/health.d/entropy.conf
+/usr/lib64/netdata/conf.d/health.d/exporting.conf
+/usr/lib64/netdata/conf.d/health.d/file_descriptors.conf
+/usr/lib64/netdata/conf.d/health.d/gearman.conf
+/usr/lib64/netdata/conf.d/health.d/geth.conf
+/usr/lib64/netdata/conf.d/health.d/go.d.plugin.conf
+/usr/lib64/netdata/conf.d/health.d/haproxy.conf
+/usr/lib64/netdata/conf.d/health.d/hdfs.conf
+/usr/lib64/netdata/conf.d/health.d/httpcheck.conf
+/usr/lib64/netdata/conf.d/health.d/ioping.conf
+/usr/lib64/netdata/conf.d/health.d/ipc.conf
+/usr/lib64/netdata/conf.d/health.d/ipfs.conf
+/usr/lib64/netdata/conf.d/health.d/ipmi.conf
+/usr/lib64/netdata/conf.d/health.d/isc_dhcpd.conf
+/usr/lib64/netdata/conf.d/health.d/kubelet.conf
+/usr/lib64/netdata/conf.d/health.d/linux_power_supply.conf
+/usr/lib64/netdata/conf.d/health.d/load.conf
+/usr/lib64/netdata/conf.d/health.d/mdstat.conf
+/usr/lib64/netdata/conf.d/health.d/megacli.conf
+/usr/lib64/netdata/conf.d/health.d/memcached.conf
+/usr/lib64/netdata/conf.d/health.d/memory.conf
+/usr/lib64/netdata/conf.d/health.d/ml.conf
+/usr/lib64/netdata/conf.d/health.d/mysql.conf
+/usr/lib64/netdata/conf.d/health.d/net.conf
+/usr/lib64/netdata/conf.d/health.d/netfilter.conf
+/usr/lib64/netdata/conf.d/health.d/nut.conf
+/usr/lib64/netdata/conf.d/health.d/nvme.conf
+/usr/lib64/netdata/conf.d/health.d/pihole.conf
+/usr/lib64/netdata/conf.d/health.d/ping.conf
+/usr/lib64/netdata/conf.d/health.d/plugin.conf
+/usr/lib64/netdata/conf.d/health.d/portcheck.conf
+/usr/lib64/netdata/conf.d/health.d/postgres.conf
+/usr/lib64/netdata/conf.d/health.d/processes.conf
+/usr/lib64/netdata/conf.d/health.d/python.d.plugin.conf
+/usr/lib64/netdata/conf.d/health.d/qos.conf
+/usr/lib64/netdata/conf.d/health.d/ram.conf
+/usr/lib64/netdata/conf.d/health.d/redis.conf
+/usr/lib64/netdata/conf.d/health.d/retroshare.conf
+/usr/lib64/netdata/conf.d/health.d/riakkv.conf
+/usr/lib64/netdata/conf.d/health.d/scaleio.conf
+/usr/lib64/netdata/conf.d/health.d/softnet.conf
+/usr/lib64/netdata/conf.d/health.d/swap.conf
+/usr/lib64/netdata/conf.d/health.d/synchronization.conf
+/usr/lib64/netdata/conf.d/health.d/systemdunits.conf
+/usr/lib64/netdata/conf.d/health.d/tcp_conn.conf
+/usr/lib64/netdata/conf.d/health.d/tcp_listen.conf
+/usr/lib64/netdata/conf.d/health.d/tcp_mem.conf
+/usr/lib64/netdata/conf.d/health.d/tcp_orphans.conf
+/usr/lib64/netdata/conf.d/health.d/tcp_resets.conf
+/usr/lib64/netdata/conf.d/health.d/timex.conf
+/usr/lib64/netdata/conf.d/health.d/udp_errors.conf
+/usr/lib64/netdata/conf.d/health.d/unbound.conf
+/usr/lib64/netdata/conf.d/health.d/vcsa.conf
+/usr/lib64/netdata/conf.d/health.d/vernemq.conf
+/usr/lib64/netdata/conf.d/health.d/vsphere.conf
+/usr/lib64/netdata/conf.d/health.d/web_log.conf
+/usr/lib64/netdata/conf.d/health.d/whoisquery.conf
+/usr/lib64/netdata/conf.d/health.d/windows.conf
+/usr/lib64/netdata/conf.d/health.d/x509check.conf
+/usr/lib64/netdata/conf.d/health.d/zfs.conf
+/usr/lib64/netdata/conf.d/health_alarm_notify.conf
+/usr/lib64/netdata/conf.d/health_email_recipients.conf
+/usr/lib64/netdata/conf.d/ioping.conf
+/usr/lib64/netdata/conf.d/python.d.conf
+/usr/lib64/netdata/conf.d/python.d/adaptec_raid.conf
+/usr/lib64/netdata/conf.d/python.d/alarms.conf
+/usr/lib64/netdata/conf.d/python.d/am2320.conf
+/usr/lib64/netdata/conf.d/python.d/anomalies.conf
+/usr/lib64/netdata/conf.d/python.d/beanstalk.conf
+/usr/lib64/netdata/conf.d/python.d/bind_rndc.conf
+/usr/lib64/netdata/conf.d/python.d/boinc.conf
+/usr/lib64/netdata/conf.d/python.d/ceph.conf
+/usr/lib64/netdata/conf.d/python.d/changefinder.conf
+/usr/lib64/netdata/conf.d/python.d/dovecot.conf
+/usr/lib64/netdata/conf.d/python.d/example.conf
+/usr/lib64/netdata/conf.d/python.d/exim.conf
+/usr/lib64/netdata/conf.d/python.d/fail2ban.conf
+/usr/lib64/netdata/conf.d/python.d/gearman.conf
+/usr/lib64/netdata/conf.d/python.d/go_expvar.conf
+/usr/lib64/netdata/conf.d/python.d/haproxy.conf
+/usr/lib64/netdata/conf.d/python.d/hddtemp.conf
+/usr/lib64/netdata/conf.d/python.d/hpssa.conf
+/usr/lib64/netdata/conf.d/python.d/icecast.conf
+/usr/lib64/netdata/conf.d/python.d/ipfs.conf
+/usr/lib64/netdata/conf.d/python.d/litespeed.conf
+/usr/lib64/netdata/conf.d/python.d/megacli.conf
+/usr/lib64/netdata/conf.d/python.d/memcached.conf
+/usr/lib64/netdata/conf.d/python.d/monit.conf
+/usr/lib64/netdata/conf.d/python.d/nsd.conf
+/usr/lib64/netdata/conf.d/python.d/nvidia_smi.conf
+/usr/lib64/netdata/conf.d/python.d/openldap.conf
+/usr/lib64/netdata/conf.d/python.d/oracledb.conf
+/usr/lib64/netdata/conf.d/python.d/pandas.conf
+/usr/lib64/netdata/conf.d/python.d/postfix.conf
+/usr/lib64/netdata/conf.d/python.d/puppet.conf
+/usr/lib64/netdata/conf.d/python.d/rethinkdbs.conf
+/usr/lib64/netdata/conf.d/python.d/retroshare.conf
+/usr/lib64/netdata/conf.d/python.d/riakkv.conf
+/usr/lib64/netdata/conf.d/python.d/samba.conf
+/usr/lib64/netdata/conf.d/python.d/sensors.conf
+/usr/lib64/netdata/conf.d/python.d/smartd_log.conf
+/usr/lib64/netdata/conf.d/python.d/spigotmc.conf
+/usr/lib64/netdata/conf.d/python.d/squid.conf
+/usr/lib64/netdata/conf.d/python.d/tomcat.conf
+/usr/lib64/netdata/conf.d/python.d/tor.conf
+/usr/lib64/netdata/conf.d/python.d/traefik.conf
+/usr/lib64/netdata/conf.d/python.d/uwsgi.conf
+/usr/lib64/netdata/conf.d/python.d/varnish.conf
+/usr/lib64/netdata/conf.d/python.d/w1sensor.conf
+/usr/lib64/netdata/conf.d/python.d/zscores.conf
+/usr/lib64/netdata/conf.d/statsd.d/asterisk.conf
+/usr/lib64/netdata/conf.d/statsd.d/example.conf
+/usr/lib64/netdata/conf.d/statsd.d/k6.conf
+/usr/lib64/netdata/conf.d/stream.conf
+/usr/lib64/netdata/conf.d/vnodes/vnodes.conf
+/usr/lib64/netdata/system/cron/netdata-updater-daily
+/usr/lib64/netdata/system/freebsd/rc.d/netdata
+/usr/lib64/netdata/system/initd/init.d/netdata
+/usr/lib64/netdata/system/launchd/netdata.plist
+/usr/lib64/netdata/system/logrotate/netdata
+/usr/lib64/netdata/system/lsb/init.d/netdata
+/usr/lib64/netdata/system/openrc/conf.d/netdata
+/usr/lib64/netdata/system/openrc/init.d/netdata
+/usr/lib64/netdata/system/runit/run
+/usr/lib64/netdata/system/systemd/50-netdata.preset
+/usr/lib64/netdata/system/systemd/netdata-updater.service
+/usr/lib64/netdata/system/systemd/netdata-updater.timer
+/usr/lib64/netdata/system/systemd/netdata.service
+/usr/lib64/netdata/system/systemd/netdata.service.v235
+
+%files bin
+%defattr(-,root,root,-)
+/V3/usr/bin/netdata
+/V3/usr/bin/netdatacli
+/usr/bin/netdata
+/usr/bin/netdata-claim.sh
+/usr/bin/netdatacli
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/netdata/web/.well-known/dnt/cookies
+/usr/share/netdata/web/asset-manifest.json
+/usr/share/netdata/web/console.html
+/usr/share/netdata/web/css/bootstrap-3.3.7.css
+/usr/share/netdata/web/css/bootstrap-slate-flat-3.3.7.css
+/usr/share/netdata/web/css/bootstrap-slider-10.0.0.min.css
+/usr/share/netdata/web/css/bootstrap-theme-3.3.7.min.css
+/usr/share/netdata/web/css/bootstrap-toggle-2.2.2.min.css
+/usr/share/netdata/web/css/c3-0.4.18.min.css
+/usr/share/netdata/web/css/dashboard.css
+/usr/share/netdata/web/css/dashboard.slate.css
+/usr/share/netdata/web/css/morris-0.5.1.css
+/usr/share/netdata/web/dash-example.html
+/usr/share/netdata/web/dashboard-react.js
+/usr/share/netdata/web/dashboard.css
+/usr/share/netdata/web/dashboard.html
+/usr/share/netdata/web/dashboard.js
+/usr/share/netdata/web/dashboard.slate.css
+/usr/share/netdata/web/dashboard_info.js
+/usr/share/netdata/web/dashboard_info_custom_example.js
+/usr/share/netdata/web/demo.html
+/usr/share/netdata/web/demo2.html
+/usr/share/netdata/web/demosites.html
+/usr/share/netdata/web/demosites2.html
+/usr/share/netdata/web/favicon.ico
+/usr/share/netdata/web/fonts/glyphicons-halflings-regular.eot
+/usr/share/netdata/web/fonts/glyphicons-halflings-regular.svg
+/usr/share/netdata/web/fonts/glyphicons-halflings-regular.ttf
+/usr/share/netdata/web/fonts/glyphicons-halflings-regular.woff
+/usr/share/netdata/web/fonts/glyphicons-halflings-regular.woff2
+/usr/share/netdata/web/goto-host-from-alarm.html
+/usr/share/netdata/web/images/alert-128-orange.png
+/usr/share/netdata/web/images/alert-128-red.png
+/usr/share/netdata/web/images/alert-multi-size-orange.ico
+/usr/share/netdata/web/images/alert-multi-size-red.ico
+/usr/share/netdata/web/images/alerts.jpg
+/usr/share/netdata/web/images/alerts.png
+/usr/share/netdata/web/images/android-icon-144x144.png
+/usr/share/netdata/web/images/android-icon-192x192.png
+/usr/share/netdata/web/images/android-icon-36x36.png
+/usr/share/netdata/web/images/android-icon-48x48.png
+/usr/share/netdata/web/images/android-icon-72x72.png
+/usr/share/netdata/web/images/android-icon-96x96.png
+/usr/share/netdata/web/images/animated.gif
+/usr/share/netdata/web/images/apple-icon-114x114.png
+/usr/share/netdata/web/images/apple-icon-120x120.png
+/usr/share/netdata/web/images/apple-icon-144x144.png
+/usr/share/netdata/web/images/apple-icon-152x152.png
+/usr/share/netdata/web/images/apple-icon-180x180.png
+/usr/share/netdata/web/images/apple-icon-57x57.png
+/usr/share/netdata/web/images/apple-icon-60x60.png
+/usr/share/netdata/web/images/apple-icon-72x72.png
+/usr/share/netdata/web/images/apple-icon-76x76.png
+/usr/share/netdata/web/images/apple-icon-precomposed.png
+/usr/share/netdata/web/images/apple-icon.png
+/usr/share/netdata/web/images/banner-icon-144x144.png
+/usr/share/netdata/web/images/check-mark-2-128-green.png
+/usr/share/netdata/web/images/check-mark-2-multi-size-green.ico
+/usr/share/netdata/web/images/dashboards.png
+/usr/share/netdata/web/images/favicon-128.png
+/usr/share/netdata/web/images/favicon-16x16.png
+/usr/share/netdata/web/images/favicon-196x196.png
+/usr/share/netdata/web/images/favicon-32x32.png
+/usr/share/netdata/web/images/favicon-96x96.png
+/usr/share/netdata/web/images/favicon.ico
+/usr/share/netdata/web/images/home.png
+/usr/share/netdata/web/images/ms-icon-144x144.png
+/usr/share/netdata/web/images/ms-icon-150x150.png
+/usr/share/netdata/web/images/ms-icon-310x150.png
+/usr/share/netdata/web/images/ms-icon-310x310.png
+/usr/share/netdata/web/images/ms-icon-36x36.png
+/usr/share/netdata/web/images/ms-icon-70x70.png
+/usr/share/netdata/web/images/netdata-logomark.svg
+/usr/share/netdata/web/images/netdata.svg
+/usr/share/netdata/web/images/nodeView.png
+/usr/share/netdata/web/images/nodes.jpg
+/usr/share/netdata/web/images/overview.png
+/usr/share/netdata/web/images/packaging-beta-tag.svg
+/usr/share/netdata/web/images/post.png
+/usr/share/netdata/web/images/pricing.png
+/usr/share/netdata/web/images/seo-performance-128.png
+/usr/share/netdata/web/index-node-view.html
+/usr/share/netdata/web/index.html
+/usr/share/netdata/web/infographic.html
+/usr/share/netdata/web/lib/bootstrap-3.3.7.min.js
+/usr/share/netdata/web/lib/bootstrap-slider-10.0.0.min.js
+/usr/share/netdata/web/lib/bootstrap-table-1.11.0.min.js
+/usr/share/netdata/web/lib/bootstrap-table-export-1.11.0.min.js
+/usr/share/netdata/web/lib/bootstrap-toggle-2.2.2.min.js
+/usr/share/netdata/web/lib/clipboard-polyfill-be05dad.js
+/usr/share/netdata/web/lib/d3-4.12.2.min.js
+/usr/share/netdata/web/lib/d3pie-0.2.1-netdata-3.js
+/usr/share/netdata/web/lib/dygraph-c91c859.min.js
+/usr/share/netdata/web/lib/dygraph-smooth-plotter-c91c859.js
+/usr/share/netdata/web/lib/fontawesome-all-5.0.1.min.js
+/usr/share/netdata/web/lib/gauge-1.3.2.min.js
+/usr/share/netdata/web/lib/jquery-3.6.0.min.js
+/usr/share/netdata/web/lib/jquery.easypiechart-97b5824.min.js
+/usr/share/netdata/web/lib/jquery.peity-3.2.0.min.js
+/usr/share/netdata/web/lib/jquery.sparkline-2.1.2.min.js
+/usr/share/netdata/web/lib/lz-string-1.4.4.min.js
+/usr/share/netdata/web/lib/pako-1.0.6.min.js
+/usr/share/netdata/web/lib/perfect-scrollbar-0.6.15.min.js
+/usr/share/netdata/web/lib/tableExport-1.6.0.min.js
+/usr/share/netdata/web/main.css
+/usr/share/netdata/web/main.js
+/usr/share/netdata/web/manifest.json
+/usr/share/netdata/web/netdata-swagger.json
+/usr/share/netdata/web/netdata-swagger.yaml
+/usr/share/netdata/web/old/index.html
+/usr/share/netdata/web/precache-manifest.e2d3811ef5e4b7e75e1f56d6ee92ef2c.js
+/usr/share/netdata/web/refresh-badges.js
+/usr/share/netdata/web/registry-access.html
+/usr/share/netdata/web/registry-alert-redirect.html
+/usr/share/netdata/web/registry-hello.html
+/usr/share/netdata/web/robots.txt
+/usr/share/netdata/web/service-worker.js
+/usr/share/netdata/web/sitemap.xml
+/usr/share/netdata/web/static/css/2.c454aab8.chunk.css
+/usr/share/netdata/web/static/css/2.c454aab8.chunk.css.map
+/usr/share/netdata/web/static/css/4.a36e3b73.chunk.css
+/usr/share/netdata/web/static/css/4.a36e3b73.chunk.css.map
+/usr/share/netdata/web/static/css/main.53ba10f1.chunk.css
+/usr/share/netdata/web/static/css/main.53ba10f1.chunk.css.map
+/usr/share/netdata/web/static/img/netdata-logomark.svg
+/usr/share/netdata/web/static/js/10.a5cd7d0e.chunk.js
+/usr/share/netdata/web/static/js/10.a5cd7d0e.chunk.js.map
+/usr/share/netdata/web/static/js/2.62d105c5.chunk.js
+/usr/share/netdata/web/static/js/2.62d105c5.chunk.js.LICENSE
+/usr/share/netdata/web/static/js/2.62d105c5.chunk.js.map
+/usr/share/netdata/web/static/js/3.f137faca.chunk.js
+/usr/share/netdata/web/static/js/3.f137faca.chunk.js.map
+/usr/share/netdata/web/static/js/4.2dbcd906.chunk.js
+/usr/share/netdata/web/static/js/4.2dbcd906.chunk.js.map
+/usr/share/netdata/web/static/js/5.2f783a54.chunk.js
+/usr/share/netdata/web/static/js/5.2f783a54.chunk.js.LICENSE
+/usr/share/netdata/web/static/js/5.2f783a54.chunk.js.map
+/usr/share/netdata/web/static/js/6.e1951239.chunk.js
+/usr/share/netdata/web/static/js/6.e1951239.chunk.js.map
+/usr/share/netdata/web/static/js/7.c2417fb0.chunk.js
+/usr/share/netdata/web/static/js/7.c2417fb0.chunk.js.map
+/usr/share/netdata/web/static/js/8.b4161ea2.chunk.js
+/usr/share/netdata/web/static/js/8.b4161ea2.chunk.js.map
+/usr/share/netdata/web/static/js/9.a4363968.chunk.js
+/usr/share/netdata/web/static/js/9.a4363968.chunk.js.map
+/usr/share/netdata/web/static/js/main.e248095a.chunk.js
+/usr/share/netdata/web/static/js/main.e248095a.chunk.js.LICENSE
+/usr/share/netdata/web/static/js/main.e248095a.chunk.js.map
+/usr/share/netdata/web/static/js/runtime-main.08abed8f.js
+/usr/share/netdata/web/static/js/runtime-main.08abed8f.js.map
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-100.245539db.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-100.9a582f3a.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-100italic.1ea7c5d2.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-100italic.3c34cf08.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-200.67524c36.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-200.bf72c841.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-200italic.52df2560.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-200italic.bbc2d552.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-300.10bb6a0a.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-300.9e1c48af.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-300italic.c76f2ab5.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-300italic.d3566d5b.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-400.263d6267.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-400.a2c56f94.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-400italic.272f8611.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-400italic.89a93a1b.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-500.0866c244.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-500.f6d5c5d5.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-500italic.ccd41bd1.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-500italic.ffd12d59.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-600.337b1651.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-600.7852d4dc.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-600italic.17e5379f.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-600italic.6f4ba6aa.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-700.b8809d61.woff
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-700.c9983d3d.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-700italic.02954bee.woff2
+/usr/share/netdata/web/static/media/ibm-plex-sans-latin-700italic.72e9af40.woff
+/usr/share/netdata/web/static/media/material-icons.0509ab09.woff2
+/usr/share/netdata/web/switch.html
+/usr/share/netdata/web/tv-react.html
+/usr/share/netdata/web/tv.html
+/usr/share/netdata/web/v0/index.html
+/usr/share/netdata/web/v1/index.html
+/usr/share/netdata/web/v2/1115.6acb1d00b53342cf4a94.chunk.js
+/usr/share/netdata/web/v2/1193.3f76ed755c2417f01c88.chunk.js
+/usr/share/netdata/web/v2/1282.f65cc3329e7e3eb8e645.js
+/usr/share/netdata/web/v2/161.c33d27d7097fd45f278a.chunk.js
+/usr/share/netdata/web/v2/161.c33d27d7097fd45f278a.chunk.js.LICENSE.txt
+/usr/share/netdata/web/v2/1655.f1c01cc3ba8b07dd8fae.chunk.js
+/usr/share/netdata/web/v2/2008.abd553afe7a6bed8cfc0.chunk.js
+/usr/share/netdata/web/v2/2097.d9ade1233ce20401ea8c.chunk.js
+/usr/share/netdata/web/v2/2701.89070793921be1288bb5.css
+/usr/share/netdata/web/v2/2701.98a4d24406e365a6ddf2.chunk.js
+/usr/share/netdata/web/v2/2833.78752757c7ac33d196dc.js
+/usr/share/netdata/web/v2/2833.78752757c7ac33d196dc.js.LICENSE.txt
+/usr/share/netdata/web/v2/2934.47ca322b2e59e64a0dae.chunk.js
+/usr/share/netdata/web/v2/3018.6eb82186a4656d2fce5d.chunk.js
+/usr/share/netdata/web/v2/3018.6eb82186a4656d2fce5d.chunk.js.LICENSE.txt
+/usr/share/netdata/web/v2/3032.7b4a2db28af84cd77c29.js
+/usr/share/netdata/web/v2/3071.91b1f856187aeafde398.chunk.js
+/usr/share/netdata/web/v2/3173.aedc1e477983499117c7.js
+/usr/share/netdata/web/v2/3173.aedc1e477983499117c7.js.LICENSE.txt
+/usr/share/netdata/web/v2/3241.c7a7e5d69626a9fb46d7.chunk.js
+/usr/share/netdata/web/v2/3495.7af81a22f9d135da8cbe.js
+/usr/share/netdata/web/v2/3495.7af81a22f9d135da8cbe.js.LICENSE.txt
+/usr/share/netdata/web/v2/3564.ba0e994ade7f97d72c01.chunk.js
+/usr/share/netdata/web/v2/3981.ccb665950325037c0dda.css
+/usr/share/netdata/web/v2/3D_PARTY_LICENSES.txt
+/usr/share/netdata/web/v2/4193.f5c9a2d9750a5bd2762d.chunk.js
+/usr/share/netdata/web/v2/4324.cbc343a58b942aec5218.chunk.js
+/usr/share/netdata/web/v2/4480.acae0ad582eb5265622a.js
+/usr/share/netdata/web/v2/4523.e41d6aac9a6433f9efb2.js
+/usr/share/netdata/web/v2/4523.e41d6aac9a6433f9efb2.js.LICENSE.txt
+/usr/share/netdata/web/v2/4532.0b0105ffbdd6db6f5d9a.js
+/usr/share/netdata/web/v2/4532.0b0105ffbdd6db6f5d9a.js.LICENSE.txt
+/usr/share/netdata/web/v2/4581.a60c1ffca04af99239c9.chunk.js
+/usr/share/netdata/web/v2/4744.38c08ef7e8943fa44006.chunk.js
+/usr/share/netdata/web/v2/4814.31d804681a19b084daa5.chunk.js
+/usr/share/netdata/web/v2/4890.24af5fbe5015c0b06c90.js
+/usr/share/netdata/web/v2/4915.245eefea4f250bc84a58.chunk.js
+/usr/share/netdata/web/v2/4934.565896e76ef20d10f992.chunk.js
+/usr/share/netdata/web/v2/5091.07dfc76b1d5c1623c330.chunk.js
+/usr/share/netdata/web/v2/5176.9ecb50692b5be2b8a5e2.js
+/usr/share/netdata/web/v2/5176.9ecb50692b5be2b8a5e2.js.LICENSE.txt
+/usr/share/netdata/web/v2/5316.0471244afc59c0d0d688.chunk.js
+/usr/share/netdata/web/v2/5451.b7da2b924e4d74fa28fc.chunk.js
+/usr/share/netdata/web/v2/5575.f2affb99b534dc6b7f3c.chunk.js
+/usr/share/netdata/web/v2/5575.f2affb99b534dc6b7f3c.chunk.js.LICENSE.txt
+/usr/share/netdata/web/v2/5623.d08ebc475a57a44d926c.js
+/usr/share/netdata/web/v2/5765.a33732202b95bbb627db.chunk.js
+/usr/share/netdata/web/v2/5969.f77624ecac93d1a600f5.chunk.js
+/usr/share/netdata/web/v2/597.f721ec431cd86411331e.chunk.js
+/usr/share/netdata/web/v2/6129.b1dace954d671f303383.chunk.js
+/usr/share/netdata/web/v2/6143.43acacdf8b2b70da410f.chunk.js
+/usr/share/netdata/web/v2/6252.c8a3dda4559b4b1a290f.chunk.js
+/usr/share/netdata/web/v2/6264.900c132d66035feb8143.chunk.js
+/usr/share/netdata/web/v2/6502.7c1716799823661c447d.chunk.js
+/usr/share/netdata/web/v2/6610.af47b6cda809af7dc878.chunk.js
+/usr/share/netdata/web/v2/6613.384da655707f4c3b6153.css
+/usr/share/netdata/web/v2/6613.b8903cda67bd33100ce4.chunk.js
+/usr/share/netdata/web/v2/6613.b8903cda67bd33100ce4.chunk.js.LICENSE.txt
+/usr/share/netdata/web/v2/6654.1a629783ec67ee7b2535.chunk.js
+/usr/share/netdata/web/v2/6723.c82b4d5b9c7d8207b985.chunk.js
+/usr/share/netdata/web/v2/6723.cc9fa5f3bdc0bf3ab2fc.css
+/usr/share/netdata/web/v2/6817.a41c740ef4ad290ddc09.chunk.js
+/usr/share/netdata/web/v2/7241.dae29a2c5dba9d8b64c6.chunk.js
+/usr/share/netdata/web/v2/7359.47dc8a0852f6cefdf8e4.chunk.js
+/usr/share/netdata/web/v2/7514.685fae6aee82518a9737.chunk.js
+/usr/share/netdata/web/v2/7514.685fae6aee82518a9737.chunk.js.LICENSE.txt
+/usr/share/netdata/web/v2/7707.d32bdcf8038b7eebaa97.js
+/usr/share/netdata/web/v2/7707.d32bdcf8038b7eebaa97.js.LICENSE.txt
+/usr/share/netdata/web/v2/8086.9d0c359423067e788807.chunk.js
+/usr/share/netdata/web/v2/8102.0d5c0d9f32667fc42e0c.chunk.js
+/usr/share/netdata/web/v2/8282.85c31db36364366177ab.chunk.js
+/usr/share/netdata/web/v2/8447.37fff40af8864776d155.chunk.js
+/usr/share/netdata/web/v2/8663.defe390dbe87f8ebb98f.chunk.js
+/usr/share/netdata/web/v2/8837.c7fd14cf3df616fdcc8f.chunk.js
+/usr/share/netdata/web/v2/8977.1e728c5c7e9af0e0089b.chunk.js
+/usr/share/netdata/web/v2/9020.afb7f9501284f53ab885.chunk.js
+/usr/share/netdata/web/v2/9201.3b4bde3431aac911f02e.chunk.js
+/usr/share/netdata/web/v2/9360.eda00d2b12ba6fe04e3e.chunk.js
+/usr/share/netdata/web/v2/9510.dfc219c382691661c69a.chunk.js
+/usr/share/netdata/web/v2/9851.cd13a054c85cef198291.chunk.js
+/usr/share/netdata/web/v2/LICENSE.md
+/usr/share/netdata/web/v2/agent.html
+/usr/share/netdata/web/v2/allFiles.6.29.0.json
+/usr/share/netdata/web/v2/allFiles.6.json
+/usr/share/netdata/web/v2/app.0917ff2bf5d3b8b0678d.css
+/usr/share/netdata/web/v2/app.7bf3bd12482ad161443d.js
+/usr/share/netdata/web/v2/bundlesManifest.6.json
+/usr/share/netdata/web/v2/editor.b20cc786651a0c83801c.chunk.js
+/usr/share/netdata/web/v2/favicon.ico
+/usr/share/netdata/web/v2/index.html
+/usr/share/netdata/web/v2/local-agent.html
+/usr/share/netdata/web/v2/npm.react.dom.6431597f0353cbef2a34.js
+/usr/share/netdata/web/v2/npm.react.dom.6431597f0353cbef2a34.js.LICENSE.txt
+/usr/share/netdata/web/v2/registry-access.html
+/usr/share/netdata/web/v2/registry-alert-redirect.html
+/usr/share/netdata/web/v2/registry-hello.html
+/usr/share/netdata/web/v2/runtime.e3716b90b888609b7a5c.js
+/usr/share/netdata/web/v2/static/email/img/clea_badge.png
+/usr/share/netdata/web/v2/static/email/img/clea_siren.png
+/usr/share/netdata/web/v2/static/email/img/community_icon.png
+/usr/share/netdata/web/v2/static/email/img/configure_icon.png
+/usr/share/netdata/web/v2/static/email/img/crit_badge.png
+/usr/share/netdata/web/v2/static/email/img/crit_siren.png
+/usr/share/netdata/web/v2/static/email/img/flood_siren.png
+/usr/share/netdata/web/v2/static/email/img/full_logo.png
+/usr/share/netdata/web/v2/static/email/img/header.png
+/usr/share/netdata/web/v2/static/email/img/isotype_600.png
+/usr/share/netdata/web/v2/static/email/img/label_critical.png
+/usr/share/netdata/web/v2/static/email/img/label_recovered.png
+/usr/share/netdata/web/v2/static/email/img/label_warning.png
+/usr/share/netdata/web/v2/static/email/img/reachability_siren.png
+/usr/share/netdata/web/v2/static/email/img/warn_badge.png
+/usr/share/netdata/web/v2/static/email/img/warn_siren.png
+/usr/share/netdata/web/v2/static/img/list-style-image.svg
+/usr/share/netdata/web/v2/static/img/logos/os/alpine.svg
+/usr/share/netdata/web/v2/static/img/logos/os/arch.svg
+/usr/share/netdata/web/v2/static/img/logos/os/centos.svg
+/usr/share/netdata/web/v2/static/img/logos/os/coreos.svg
+/usr/share/netdata/web/v2/static/img/logos/os/debian.svg
+/usr/share/netdata/web/v2/static/img/logos/os/docker.svg
+/usr/share/netdata/web/v2/static/img/logos/os/fedora.svg
+/usr/share/netdata/web/v2/static/img/logos/os/freebsd.svg
+/usr/share/netdata/web/v2/static/img/logos/os/freenas.svg
+/usr/share/netdata/web/v2/static/img/logos/os/gentoo.svg
+/usr/share/netdata/web/v2/static/img/logos/os/kubernetes.svg
+/usr/share/netdata/web/v2/static/img/logos/os/linux-small.svg
+/usr/share/netdata/web/v2/static/img/logos/os/linux.svg
+/usr/share/netdata/web/v2/static/img/logos/os/macos.svg
+/usr/share/netdata/web/v2/static/img/logos/os/manjaro.svg
+/usr/share/netdata/web/v2/static/img/logos/os/openstack.svg
+/usr/share/netdata/web/v2/static/img/logos/os/opensuse.svg
+/usr/share/netdata/web/v2/static/img/logos/os/openwrt.svg
+/usr/share/netdata/web/v2/static/img/logos/os/oracle.svg
+/usr/share/netdata/web/v2/static/img/logos/os/pfsense.svg
+/usr/share/netdata/web/v2/static/img/logos/os/placeholder.svg
+/usr/share/netdata/web/v2/static/img/logos/os/raspberry-pi.svg
+/usr/share/netdata/web/v2/static/img/logos/os/redhat.svg
+/usr/share/netdata/web/v2/static/img/logos/os/suse.svg
+/usr/share/netdata/web/v2/static/img/logos/os/ubuntu.svg
+/usr/share/netdata/web/v2/static/img/logos/services/access-point.svg
+/usr/share/netdata/web/v2/static/img/logos/services/activemq.svg
+/usr/share/netdata/web/v2/static/img/logos/services/adaptec.svg
+/usr/share/netdata/web/v2/static/img/logos/services/alerta.svg
+/usr/share/netdata/web/v2/static/img/logos/services/apache.svg
+/usr/share/netdata/web/v2/static/img/logos/services/apc.svg
+/usr/share/netdata/web/v2/static/img/logos/services/aws-sns.svg
+/usr/share/netdata/web/v2/static/img/logos/services/aws.svg
+/usr/share/netdata/web/v2/static/img/logos/services/beanstalkd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/boinc.svg
+/usr/share/netdata/web/v2/static/img/logos/services/btrfs.svg
+/usr/share/netdata/web/v2/static/img/logos/services/ceph.svg
+/usr/share/netdata/web/v2/static/img/logos/services/chrony.svg
+/usr/share/netdata/web/v2/static/img/logos/services/cloud.svg
+/usr/share/netdata/web/v2/static/img/logos/services/concul.svg
+/usr/share/netdata/web/v2/static/img/logos/services/consul.svg
+/usr/share/netdata/web/v2/static/img/logos/services/container.svg
+/usr/share/netdata/web/v2/static/img/logos/services/couchdb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/cups.svg
+/usr/share/netdata/web/v2/static/img/logos/services/data-encryption.svg
+/usr/share/netdata/web/v2/static/img/logos/services/ddos.svg
+/usr/share/netdata/web/v2/static/img/logos/services/discord.svg
+/usr/share/netdata/web/v2/static/img/logos/services/dns.svg
+/usr/share/netdata/web/v2/static/img/logos/services/docker.svg
+/usr/share/netdata/web/v2/static/img/logos/services/dovecot.svg
+/usr/share/netdata/web/v2/static/img/logos/services/elasticsearch.svg
+/usr/share/netdata/web/v2/static/img/logos/services/email.svg
+/usr/share/netdata/web/v2/static/img/logos/services/exim.svg
+/usr/share/netdata/web/v2/static/img/logos/services/fail2ban.svg
+/usr/share/netdata/web/v2/static/img/logos/services/flock.svg
+/usr/share/netdata/web/v2/static/img/logos/services/fluentd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/fping.svg
+/usr/share/netdata/web/v2/static/img/logos/services/freeradius.svg
+/usr/share/netdata/web/v2/static/img/logos/services/fronius.svg
+/usr/share/netdata/web/v2/static/img/logos/services/gnu-freeipmi.svg
+/usr/share/netdata/web/v2/static/img/logos/services/golang.svg
+/usr/share/netdata/web/v2/static/img/logos/services/grafana.svg
+/usr/share/netdata/web/v2/static/img/logos/services/graphite.svg
+/usr/share/netdata/web/v2/static/img/logos/services/haproxy.svg
+/usr/share/netdata/web/v2/static/img/logos/services/hub.svg
+/usr/share/netdata/web/v2/static/img/logos/services/icecast.svg
+/usr/share/netdata/web/v2/static/img/logos/services/influxdb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/ipfs.svg
+/usr/share/netdata/web/v2/static/img/logos/services/irc.svg
+/usr/share/netdata/web/v2/static/img/logos/services/isc.svg
+/usr/share/netdata/web/v2/static/img/logos/services/kafka.svg
+/usr/share/netdata/web/v2/static/img/logos/services/kairosdb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/kavenegar.svg
+/usr/share/netdata/web/v2/static/img/logos/services/key-file.svg
+/usr/share/netdata/web/v2/static/img/logos/services/kubernetes.svg
+/usr/share/netdata/web/v2/static/img/logos/services/libreswan.svg
+/usr/share/netdata/web/v2/static/img/logos/services/libvirt.svg
+/usr/share/netdata/web/v2/static/img/logos/services/lighthttpd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/linux.svg
+/usr/share/netdata/web/v2/static/img/logos/services/litespeed.svg
+/usr/share/netdata/web/v2/static/img/logos/services/lm-sensors.svg
+/usr/share/netdata/web/v2/static/img/logos/services/load-balancer.svg
+/usr/share/netdata/web/v2/static/img/logos/services/log-file.svg
+/usr/share/netdata/web/v2/static/img/logos/services/logstash.svg
+/usr/share/netdata/web/v2/static/img/logos/services/lxd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/mariadb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/memcached.svg
+/usr/share/netdata/web/v2/static/img/logos/services/messagebird.svg
+/usr/share/netdata/web/v2/static/img/logos/services/mongodb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/monit.svg
+/usr/share/netdata/web/v2/static/img/logos/services/monitoring.svg
+/usr/share/netdata/web/v2/static/img/logos/services/mysql.svg
+/usr/share/netdata/web/v2/static/img/logos/services/netfilter.svg
+/usr/share/netdata/web/v2/static/img/logos/services/network-protocol.svg
+/usr/share/netdata/web/v2/static/img/logos/services/network.svg
+/usr/share/netdata/web/v2/static/img/logos/services/nfs.svg
+/usr/share/netdata/web/v2/static/img/logos/services/nginx-plus.svg
+/usr/share/netdata/web/v2/static/img/logos/services/nginx.svg
+/usr/share/netdata/web/v2/static/img/logos/services/notification-bell.svg
+/usr/share/netdata/web/v2/static/img/logos/services/nsd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/ntpd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/nut.svg
+/usr/share/netdata/web/v2/static/img/logos/services/nvidia.svg
+/usr/share/netdata/web/v2/static/img/logos/services/openldap.svg
+/usr/share/netdata/web/v2/static/img/logos/services/opensips.svg
+/usr/share/netdata/web/v2/static/img/logos/services/opentsdb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/openvpn.svg
+/usr/share/netdata/web/v2/static/img/logos/services/openzfs.svg
+/usr/share/netdata/web/v2/static/img/logos/services/oracle.svg
+/usr/share/netdata/web/v2/static/img/logos/services/pagerduty.svg
+/usr/share/netdata/web/v2/static/img/logos/services/php-fpm.svg
+/usr/share/netdata/web/v2/static/img/logos/services/placeholder.svg
+/usr/share/netdata/web/v2/static/img/logos/services/postfix.svg
+/usr/share/netdata/web/v2/static/img/logos/services/postgresql.svg
+/usr/share/netdata/web/v2/static/img/logos/services/powerdns.svg
+/usr/share/netdata/web/v2/static/img/logos/services/processor.svg
+/usr/share/netdata/web/v2/static/img/logos/services/prometheus.svg
+/usr/share/netdata/web/v2/static/img/logos/services/prowl.svg
+/usr/share/netdata/web/v2/static/img/logos/services/proxysql.svg
+/usr/share/netdata/web/v2/static/img/logos/services/puppet.svg
+/usr/share/netdata/web/v2/static/img/logos/services/pushbullet.svg
+/usr/share/netdata/web/v2/static/img/logos/services/pushover.svg
+/usr/share/netdata/web/v2/static/img/logos/services/qos.svg
+/usr/share/netdata/web/v2/static/img/logos/services/rabbitmq.svg
+/usr/share/netdata/web/v2/static/img/logos/services/raspberry-pi.svg
+/usr/share/netdata/web/v2/static/img/logos/services/redis.svg
+/usr/share/netdata/web/v2/static/img/logos/services/rethinkdb.svg
+/usr/share/netdata/web/v2/static/img/logos/services/retroshare.svg
+/usr/share/netdata/web/v2/static/img/logos/services/rocketchat.svg
+/usr/share/netdata/web/v2/static/img/logos/services/samba.svg
+/usr/share/netdata/web/v2/static/img/logos/services/server-connection.svg
+/usr/share/netdata/web/v2/static/img/logos/services/slack.svg
+/usr/share/netdata/web/v2/static/img/logos/services/sma.svg
+/usr/share/netdata/web/v2/static/img/logos/services/smstools3.svg
+/usr/share/netdata/web/v2/static/img/logos/services/solr.svg
+/usr/share/netdata/web/v2/static/img/logos/services/spigot.svg
+/usr/share/netdata/web/v2/static/img/logos/services/springboot.svg
+/usr/share/netdata/web/v2/static/img/logos/services/squid.svg
+/usr/share/netdata/web/v2/static/img/logos/services/statsd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/stiebel.svg
+/usr/share/netdata/web/v2/static/img/logos/services/systemd.svg
+/usr/share/netdata/web/v2/static/img/logos/services/telegram.svg
+/usr/share/netdata/web/v2/static/img/logos/services/temperature.svg
+/usr/share/netdata/web/v2/static/img/logos/services/tomcat.svg
+/usr/share/netdata/web/v2/static/img/logos/services/tor.svg
+/usr/share/netdata/web/v2/static/img/logos/services/traefik.svg
+/usr/share/netdata/web/v2/static/img/logos/services/twilio.svg
+/usr/share/netdata/web/v2/static/img/logos/services/unbound.svg
+/usr/share/netdata/web/v2/static/img/logos/services/uwsgi.svg
+/usr/share/netdata/web/v2/static/img/logos/services/varnish.svg
+/usr/share/netdata/web/v2/static/img/logos/services/veritas.svg
+/usr/share/netdata/web/v2/static/img/logos/services/xen.svg
+/usr/share/netdata/web/v2/static/img/mail/isotype.png
+/usr/share/netdata/web/v2/static/img/mail/isotype.svg
+/usr/share/netdata/web/v2/static/img/mail/logotype.png
+/usr/share/netdata/web/v2/static/img/mail/logotype.svg
+/usr/share/netdata/web/v2/static/img/no-filter-results.png
+/usr/share/netdata/web/v2/static/img/no-nodes-room.svg
+/usr/share/netdata/web/v2/static/img/rack.png
+/usr/share/netdata/web/v2/static/site/pages/holding-page-503/holding-page-503.css
+/usr/share/netdata/web/v2/static/site/pages/holding-page-503/holding-page-503.svg
+/usr/share/netdata/web/v2/static/site/pages/holding-page-503/index.html
+/usr/share/netdata/web/v2/static/site/pages/holding-page-503/multiple-logos-group.svg
+/usr/share/netdata/web/v2/static/site/pages/holding-page-503/netdata-logo-white.svg
+/usr/share/netdata/web/v2/static/site/pages/holding-page-503/reset.svg
+/usr/share/netdata/web/v2/static/splash.css
+/usr/share/netdata/web/v2/sw.js
+/usr/share/netdata/web/version.txt
+
+%files libexec
+%defattr(-,root,root,-)
+/V3/usr/libexec/netdata/plugins.d/apps.plugin
+/V3/usr/libexec/netdata/plugins.d/cgroup-network
+/V3/usr/libexec/netdata/plugins.d/cups.plugin
+/V3/usr/libexec/netdata/plugins.d/debugfs.plugin
+/V3/usr/libexec/netdata/plugins.d/freeipmi.plugin
+/V3/usr/libexec/netdata/plugins.d/local-listeners
+/V3/usr/libexec/netdata/plugins.d/nfacct.plugin
+/V3/usr/libexec/netdata/plugins.d/perf.plugin
+/V3/usr/libexec/netdata/plugins.d/slabinfo.plugin
+/V3/usr/libexec/netdata/plugins.d/systemd-journal.plugin
+/usr/libexec/netdata/charts.d/ap.chart.sh
+/usr/libexec/netdata/charts.d/apcupsd.chart.sh
+/usr/libexec/netdata/charts.d/example.chart.sh
+/usr/libexec/netdata/charts.d/libreswan.chart.sh
+/usr/libexec/netdata/charts.d/nut.chart.sh
+/usr/libexec/netdata/charts.d/opensips.chart.sh
+/usr/libexec/netdata/charts.d/sensors.chart.sh
+/usr/libexec/netdata/install-service.sh
+/usr/libexec/netdata/plugins.d/acl.sh
+/usr/libexec/netdata/plugins.d/alarm-email.sh
+/usr/libexec/netdata/plugins.d/alarm-notify.sh
+/usr/libexec/netdata/plugins.d/alarm-test.sh
+/usr/libexec/netdata/plugins.d/alarm.sh
+/usr/libexec/netdata/plugins.d/anonymous-statistics.sh
+/usr/libexec/netdata/plugins.d/apps.plugin
+/usr/libexec/netdata/plugins.d/cgroup-name.sh
+/usr/libexec/netdata/plugins.d/cgroup-network
+/usr/libexec/netdata/plugins.d/cgroup-network-helper.sh
+/usr/libexec/netdata/plugins.d/charts.d.dryrun-helper.sh
+/usr/libexec/netdata/plugins.d/charts.d.plugin
+/usr/libexec/netdata/plugins.d/cups.plugin
+/usr/libexec/netdata/plugins.d/debugfs.plugin
+/usr/libexec/netdata/plugins.d/ebpf_thread_function.sh
+/usr/libexec/netdata/plugins.d/freeipmi.plugin
+/usr/libexec/netdata/plugins.d/get-kubernetes-labels.sh
+/usr/libexec/netdata/plugins.d/health-cmdapi-test.sh
+/usr/libexec/netdata/plugins.d/ioping.plugin
+/usr/libexec/netdata/plugins.d/local-listeners
+/usr/libexec/netdata/plugins.d/loopsleepms.sh.inc
+/usr/libexec/netdata/plugins.d/nfacct.plugin
+/usr/libexec/netdata/plugins.d/perf.plugin
+/usr/libexec/netdata/plugins.d/python.d.plugin
+/usr/libexec/netdata/plugins.d/request.sh
+/usr/libexec/netdata/plugins.d/slabinfo.plugin
+/usr/libexec/netdata/plugins.d/system-info.sh
+/usr/libexec/netdata/plugins.d/systemd-journal.plugin
+/usr/libexec/netdata/plugins.d/tc-qos-helper.sh
+/usr/libexec/netdata/plugins.d/template_dim.sh
+/usr/libexec/netdata/python.d/adaptec_raid.chart.py
+/usr/libexec/netdata/python.d/alarms.chart.py
+/usr/libexec/netdata/python.d/am2320.chart.py
+/usr/libexec/netdata/python.d/anomalies.chart.py
+/usr/libexec/netdata/python.d/beanstalk.chart.py
+/usr/libexec/netdata/python.d/bind_rndc.chart.py
+/usr/libexec/netdata/python.d/boinc.chart.py
+/usr/libexec/netdata/python.d/ceph.chart.py
+/usr/libexec/netdata/python.d/changefinder.chart.py
+/usr/libexec/netdata/python.d/dovecot.chart.py
+/usr/libexec/netdata/python.d/example.chart.py
+/usr/libexec/netdata/python.d/exim.chart.py
+/usr/libexec/netdata/python.d/fail2ban.chart.py
+/usr/libexec/netdata/python.d/gearman.chart.py
+/usr/libexec/netdata/python.d/go_expvar.chart.py
+/usr/libexec/netdata/python.d/haproxy.chart.py
+/usr/libexec/netdata/python.d/hddtemp.chart.py
+/usr/libexec/netdata/python.d/hpssa.chart.py
+/usr/libexec/netdata/python.d/icecast.chart.py
+/usr/libexec/netdata/python.d/ipfs.chart.py
+/usr/libexec/netdata/python.d/litespeed.chart.py
+/usr/libexec/netdata/python.d/megacli.chart.py
+/usr/libexec/netdata/python.d/memcached.chart.py
+/usr/libexec/netdata/python.d/monit.chart.py
+/usr/libexec/netdata/python.d/nsd.chart.py
+/usr/libexec/netdata/python.d/nvidia_smi.chart.py
+/usr/libexec/netdata/python.d/openldap.chart.py
+/usr/libexec/netdata/python.d/oracledb.chart.py
+/usr/libexec/netdata/python.d/pandas.chart.py
+/usr/libexec/netdata/python.d/postfix.chart.py
+/usr/libexec/netdata/python.d/puppet.chart.py
+/usr/libexec/netdata/python.d/python_modules/__init__.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/ExecutableService.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/LogService.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/MySQLService.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/SimpleService.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/SocketService.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/UrlService.py
+/usr/libexec/netdata/python.d/python_modules/bases/FrameworkServices/__init__.py
+/usr/libexec/netdata/python.d/python_modules/bases/__init__.py
+/usr/libexec/netdata/python.d/python_modules/bases/charts.py
+/usr/libexec/netdata/python.d/python_modules/bases/collection.py
+/usr/libexec/netdata/python.d/python_modules/bases/loaders.py
+/usr/libexec/netdata/python.d/python_modules/bases/loggers.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/__init__.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/composer.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/constructor.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/cyaml.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/dumper.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/emitter.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/error.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/events.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/loader.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/nodes.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/parser.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/reader.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/representer.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/resolver.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/scanner.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/serializer.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml2/tokens.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/__init__.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/composer.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/constructor.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/cyaml.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/dumper.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/emitter.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/error.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/events.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/loader.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/nodes.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/parser.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/reader.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/representer.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/resolver.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/scanner.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/serializer.py
+/usr/libexec/netdata/python.d/python_modules/pyyaml3/tokens.py
+/usr/libexec/netdata/python.d/python_modules/third_party/__init__.py
+/usr/libexec/netdata/python.d/python_modules/third_party/boinc_client.py
+/usr/libexec/netdata/python.d/python_modules/third_party/filelock.py
+/usr/libexec/netdata/python.d/python_modules/third_party/lm_sensors.py
+/usr/libexec/netdata/python.d/python_modules/third_party/mcrcon.py
+/usr/libexec/netdata/python.d/python_modules/third_party/monotonic.py
+/usr/libexec/netdata/python.d/python_modules/third_party/ordereddict.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/_collections.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/connection.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/connectionpool.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/_securetransport/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/_securetransport/bindings.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/_securetransport/low_level.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/appengine.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/ntlmpool.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/pyopenssl.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/securetransport.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/contrib/socks.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/exceptions.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/fields.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/filepost.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/backports/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/backports/makefile.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/ordered_dict.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/six.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/ssl_match_hostname/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/packages/ssl_match_hostname/_implementation.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/poolmanager.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/request.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/response.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/__init__.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/connection.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/request.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/response.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/retry.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/selectors.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/ssl_.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/timeout.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/url.py
+/usr/libexec/netdata/python.d/python_modules/urllib3/util/wait.py
+/usr/libexec/netdata/python.d/rethinkdbs.chart.py
+/usr/libexec/netdata/python.d/retroshare.chart.py
+/usr/libexec/netdata/python.d/riakkv.chart.py
+/usr/libexec/netdata/python.d/samba.chart.py
+/usr/libexec/netdata/python.d/sensors.chart.py
+/usr/libexec/netdata/python.d/smartd_log.chart.py
+/usr/libexec/netdata/python.d/spigotmc.chart.py
+/usr/libexec/netdata/python.d/squid.chart.py
+/usr/libexec/netdata/python.d/tomcat.chart.py
+/usr/libexec/netdata/python.d/tor.chart.py
+/usr/libexec/netdata/python.d/traefik.chart.py
+/usr/libexec/netdata/python.d/uwsgi.chart.py
+/usr/libexec/netdata/python.d/varnish.chart.py
+/usr/libexec/netdata/python.d/w1sensor.chart.py
+/usr/libexec/netdata/python.d/zscores.chart.py
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/netdata/00cfbd3b6e9708228a623875361a43d2e1e9314b
+/usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a
+/usr/share/package-licenses/netdata/183197624e7e4e2df6767ed44a86fe531e93b7d1
+/usr/share/package-licenses/netdata/1dfac2a569f40ecb052b41d8dcecb48a1cdf2bf0
+/usr/share/package-licenses/netdata/31a3d460bb3c7d98845187c716a30db81c44b615
+/usr/share/package-licenses/netdata/3f317fbb3e08fd99169d2e77105d562ea0e482c7
+/usr/share/package-licenses/netdata/5b3ba9f70f16129389dd3160507407afda7bd9d5
+/usr/share/package-licenses/netdata/5b93771bfe94f1e5417f9111f02aa880472a0e7c
+/usr/share/package-licenses/netdata/5c103e7cfbcc509830ed46db6384bb1e248dd93b
+/usr/share/package-licenses/netdata/68af023f8c18dad5d0d48023109cecf405821308
+/usr/share/package-licenses/netdata/82da472f6d00dc5f0a651f33ebb320aa9c7b08d0
+/usr/share/package-licenses/netdata/8f8fc5a876007f452614f65a13315c00b235f0e3
+/usr/share/package-licenses/netdata/a33b61f04391a38904373d020e7fbabf211383f6
+/usr/share/package-licenses/netdata/a8a12e6867d7ee39c21d9b11a984066099b6fb6b
+/usr/share/package-licenses/netdata/b808695ed54b984a6998ca782895fb68f465455c
+/usr/share/package-licenses/netdata/b91b4c6e7b5d2321318790e733a9e5c1f93c298f
+/usr/share/package-licenses/netdata/c01c212bdf3925189f673e2081b44094023860ea
+/usr/share/package-licenses/netdata/c2823768370eacadd57325e509a10bd592996130
+/usr/share/package-licenses/netdata/f10827e319e8d557b9ea230fbea9846ee5e7c34d
+/usr/share/package-licenses/netdata/f2aea45b40bb8015da30997e270ecd7631a6a14d
+
+%files services
+%defattr(-,root,root,-)
+/usr/lib/systemd/system/netdata.service

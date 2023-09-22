@@ -1,4 +1,4 @@
 rm -rf %{buildroot}/var
 mkdir -p %{buildroot}/usr/lib/systemd/system/
-install -m 644 -p system/netdata.service "%{buildroot}/usr/lib/systemd/system/netdata.service"
+install -m 644 -p system/systemd/netdata.service "%{buildroot}/usr/lib/systemd/system/netdata.service"
 

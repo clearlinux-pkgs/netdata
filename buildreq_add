@@ -7,3 +7,4 @@ libuv-dev
 systemd-dev
 snappy-dev
 lz4-dev
+yaml-dev
