@@ -7,7 +7,7 @@
 #
 Name     : netdata
 Version  : 1.44.0
-Release  : 38
+Release  : 39
 URL      : https://github.com/netdata/netdata/releases/download/v1.44.0/netdata-v1.44.0.tar.gz
 Source0  : https://github.com/netdata/netdata/releases/download/v1.44.0/netdata-v1.44.0.tar.gz
 Summary  : The CUPS metrics collection plugin for the Netdata Agent
@@ -116,7 +116,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1701897021
+export SOURCE_DATE_EPOCH=1702038181
 unset LD_AS_NEEDED
 export GCC_IGNORE_WERROR=1
 CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -154,7 +154,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1701897021
+export SOURCE_DATE_EPOCH=1702038181
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/netdata
 cp %{_builddir}/netdata-v%{version}/LICENSE %{buildroot}/usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a || :
