@@ -6,10 +6,10 @@
 # autospec commit: c1050fe
 #
 Name     : netdata
-Version  : 1.44.0
-Release  : 39
-URL      : https://github.com/netdata/netdata/releases/download/v1.44.0/netdata-v1.44.0.tar.gz
-Source0  : https://github.com/netdata/netdata/releases/download/v1.44.0/netdata-v1.44.0.tar.gz
+Version  : 1.44.1
+Release  : 40
+URL      : https://github.com/netdata/netdata/releases/download/v1.44.1/netdata-v1.44.1.tar.gz
+Source0  : https://github.com/netdata/netdata/releases/download/v1.44.1/netdata-v1.44.1.tar.gz
 Summary  : The CUPS metrics collection plugin for the Netdata Agent
 Group    : Development/Tools
 License  : Apache-2.0 Artistic-1.0 BSD-2-Clause BSD-3-Clause BSL-1.0 CC0-1.0 GPL-1.0 GPL-2.0 GPL-3.0 GPL-3.0+ LGPL-3.0 Libpng MIT
@@ -105,10 +105,10 @@ services components for the netdata package.
 
 
 %prep
-%setup -q -n netdata-v1.44.0
-cd %{_builddir}/netdata-v1.44.0
+%setup -q -n netdata-v1.44.1
+cd %{_builddir}/netdata-v1.44.1
 pushd ..
-cp -a netdata-v1.44.0 buildavx2
+cp -a netdata-v1.44.1 buildavx2
 popd
 
 %build
@@ -116,7 +116,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1702038181
+export SOURCE_DATE_EPOCH=1702495056
 unset LD_AS_NEEDED
 export GCC_IGNORE_WERROR=1
 CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -154,7 +154,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1702038181
+export SOURCE_DATE_EPOCH=1702495056
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/netdata
 cp %{_builddir}/netdata-v%{version}/LICENSE %{buildroot}/usr/share/package-licenses/netdata/16f29acc74321cf07b75fbb3a318a263b71e218a || :
