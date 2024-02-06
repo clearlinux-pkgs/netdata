@@ -34,8 +34,6 @@ Configure miss: libmongoc-1.0 >= 1.7
 Configure miss: libmongoc-1.0 >= 1.7
 Configure miss: rtcCreatePeerConnection in -ldatachannel
 Configure miss: rtcCreatePeerConnection in -ldatachannel
-Configure miss: sd_journal_get_seqnum in -lsystemd
-Configure miss: sd_journal_get_seqnum in -lsystemd
 Configure miss: whether C compiler accepts -mbranch-protection=standard
 Configure miss: whether C compiler accepts -mbranch-protection=standard
 Configure miss: x86_64-generic-linux-gnu-cups-config
